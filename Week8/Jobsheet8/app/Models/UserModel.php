@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable; // implementasi class Authenticatable
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class UserModel extends Authenticatable
 {
@@ -13,21 +13,17 @@ class UserModel extends Authenticatable
 
     protected $table = 'm_user';
     protected $primaryKey = 'user_id';
-    protected $fillable = ['username', 'password', 'nama', 'level_id', 'created_at', 'updated_at'];
+    protected $fillable = ['level_id', 'username', 'nama', 'password', 'user_profile_picture'];
 
-    protected $hidden = ['password']; // jangan ditampilkan saat select
+    protected $hidden = ['password'];
 
-    protected $casts = ['password' => 'hashed']; // casting password agar otomatis di hash
+    protected $casts = ['password' => 'hashed'];
 
-    /**
-     * Relasi ke tabel level
-     */
-    public function level(): BelongsTo
+    public function level(): BelongsTo 
     {
         return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
     }
-
-    /**
+     /**
      * Mendapatkan nama role
      */
     public function getRoleName(): string
@@ -42,7 +38,6 @@ class UserModel extends Authenticatable
     {
         return $this->level->level_kode == $role;
     }
-
     /**
      * Mendapatkan kode role
      */
@@ -50,4 +45,5 @@ class UserModel extends Authenticatable
     {
         return $this->level->level_kode;
     }
+
 }

@@ -5,10 +5,10 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-info">Import Level</button>
-                <a href="{{ url('/level/export_excel') }}" class="btn btn-primary">Export Level</a>
-                <a href="{{ url('/level/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file- pdf"></i> Export Level (PDF)</a>
-                <button onclick="modalAction('{{ url('/level/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
+                <button onclick="modalAction('{{ url('/Stok/import') }}')" class="btn btn-info">Import Stok</button>
+                <a href="{{ url('/Stok/export_excel') }}" class="btn btn-primary">Export Stok</a>
+                <a href="{{ url('/Stok/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file- pdf"></i> Export Stok (PDF)</a>
+                <button onclick="modalAction('{{ url('/Stok/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
             </div>
         </div>
         <div class="card-body">            
@@ -20,12 +20,14 @@
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
             
-            <table class="table table-bordered table-sm table-striped table-hover" id="table-level">
+            <table class="table table-bordered table-sm table-striped table-hover" id="table-Stok">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Kode Level</th>
-                        <th>Nama Level</th>
+                        <th>Kode Barang</th>
+                        <th>Kode User</th>
+                        <th>Jumlah</th>
+                        <th>Tanggal Stok </th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -44,13 +46,13 @@
                 $('#myModal').modal('show');
             });
         }
-        var tableLevel;
+        var tableStok;
         $(document).ready(function() {
-            tableLevel = $('#table-level').DataTable({
+            tableStok = $('#table-Stok').DataTable({
                 processing: true,
                 serverSide: true, 
                 ajax: {
-                    "url": "{{ url('level/list') }}",
+                    "url": "{{ url('Stok/list') }}",
                     "dataType": "json",
                     "type": "POST",
                 },
@@ -63,32 +65,46 @@
                         searchable: false
                     },
                     {
-                        data: "level_kode",
-                        className: "",
-                        width: "10%",
+                        data: "barang_id",
+                        className: "text-center",
+                        width: "6%",
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "level_nama",
-                        className: "",
-                        width: "37%",
+                        data: "user_id",
+                        className: "text-center",
+                        width: "6%",
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "stok_jumlah",
+                        className: "text-center",
+                        width: "6%",
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "stok_tanggal",
+                        className: "text-center",
+                        width: "10%",
                         orderable: true,
                         searchable: true
                     },
                     {
                         data: "aksi",
                         className: "text-center",
-                        width: "14%",
+                        width: "10%",
                         orderable: false,
                         searchable: false
                     }
                 ]
             });
 
-            $('#table-level_filter input').unbind().bind().on('keyup', function(e) {
+            $('#table-stok_filter input').unbind().bind().on('keyup', function(e) {
                 if (e.keyCode == 13) { // enter key
-                    tableLevel.search(this.value).draw();
+                    tableStok.search(this.value).draw();
                 }
             });
         });

@@ -1,9 +1,9 @@
-<form action="{{ url('/barang/import_ajax') }}" method="POST" id="form-import" enctype="multipart/form-data">
+<form action="{{ url('/stok/import_ajax') }}" method="POST" id="form-import-stok" enctype="multipart/form-data">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Import Data Barang</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Import Data Stok</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -11,15 +11,15 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Download Template</label>
-                    <a href="{{ asset('template_barang.xlsx') }}" class="btn btn-info btn-sm" download>
+                    <a href="{{ asset('template_stok.xlsx') }}" class="btn btn-info btn-sm" download>
                         <i class="fa fa-file-excel"></i> Download
                     </a>
-                    <small id="error-kategori_id" class="error-text form-text text-danger"></small>
+                    <small id="error-stok_id" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Pilih File</label>
-                    <input type="file" name="file_barang" id="file_barang" class="form-control" required>
-                    <small id="error-file_barang" class="error-text form-text text-danger"></small>
+                    <input type="file" name="file_stok" id="file_stok" class="form-control" required>
+                    <small id="error-file_stok" class="error-text form-text text-danger"></small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -32,35 +32,35 @@
 
 <script>
     $(document).ready(function() {
-        $("#form-import").validate({
+        $("#form-import-stok").validate({
             rules: {
-                file_barang: {
+                file_stok: {
                     required: true,
                     extension: "xlsx"
                 },
             },
             submitHandler: function(form) {
-                var formData = new FormData(form); // Jadikan form ke FormData untuk menghandle file
+                var formData = new FormData(form); // Convert form to FormData to handle file
                 
                 $.ajax({
                     url: form.action,
                     type: form.method,
-                    data: formData, // Data yang dikirim berupa FormData
-                    processData: false, // setting processData dan contentType ke false, untuk menghandle file
-                    contentType: false,
+                    data: formData, // Send the form data including the file
+                    processData: false, // Do not process data as URL encoded
+                    contentType: false, // Let the browser set the content type for multipart form
                     success: function(response) {
-                        if(response.status) { // jika sukses
+                        if(response.status) { // If success
                             $('#myModal').modal('hide');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            tableBarang.ajax.reload(); // reload datatable
-                        } else { // jika error
+                            dataStok.ajax.reload(); // Reload the DataTable
+                        } else { // If error
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {
-                                $('#error-'+prefix).text(val[0]);
+                                $('#error-'+prefix).text(val[0]); // Show validation errors
                             });
                             Swal.fire({
                                 icon: 'error',
@@ -75,13 +75,13 @@
             errorElement: 'span',
             errorPlacement: function(error, element) {
                 error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
+                element.closest('.form-group').append(error); // Append error to form group
             },
             highlight: function(element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
+                $(element).addClass('is-invalid'); // Add error class to input
             },
             unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
+                $(element).removeClass('is-invalid'); // Remove error class when valid
             }
         });
     });
